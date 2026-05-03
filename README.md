@@ -145,6 +145,37 @@ void send_sensor_data(int sensor_id, int value1, int value2) {
 "14:32:10.123","1","39.00","15.00"
 ```
 
+### 別方法: syslogを使わない直接送信
+
+`add.cdl` を変更せずに、アプリケーションから直接Bluetoothシリアルに送信することも可能です。
+
+**注意:** 事前にBluetoothデバイスをオープンしておく必要があります。
+
+```c
+#include <serial.h>
+
+void init_bluetooth() {
+    /* Bluetoothシリアルポートをオープン (ポート番号2) */
+    serial_opn_por(2);
+}
+
+void send_data_direct(int sensor_id, int value1, int value2) {
+    char buffer[64];
+    int len = snprintf(buffer, sizeof(buffer), "%d,%d,%d\n", sensor_id, value1, value2);
+    
+    /* Bluetoothシリアルに直接書き込み (ポート番号2) */
+    serial_wri_dat(2, buffer, len);
+}
+```
+
+**メリット:**
+- `add.cdl` の変更が不要
+- フォーマットを自由に制御可能
+
+**デメリット:**
+- アプリケーションでポート管理が必要
+- 他のログ出力との統合が必要な場合は別途対応が必要
+
 ## 注意事項
 
 - **Pybricks IDEとの同時接続は不可** - 事前にIDEから切断してください
