@@ -162,6 +162,7 @@ void send_sensor_data(int sensor_id, int value1, int value2) {
 
 void init_bluetooth() {
     /* Bluetoothシリアルポートをオープン (ポート番号2) */
+    /* ポート番号2はBluetoothを指します（USBは1） */
     serial_opn_por(2);
 }
 

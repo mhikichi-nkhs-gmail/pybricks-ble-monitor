@@ -1,4 +1,8 @@
 // Bluetooth connection functions
+
+// Buffer for incomplete data
+let receiveBuffer = '';
+
 async function connect() {
     if (!navigator.bluetooth) {
         alert('Web Bluetooth APIがサポートされていません。Chrome/Edgeブラウザを使用してください。');
@@ -39,6 +43,9 @@ async function connect() {
         await txCharacteristic.startNotifications();
         txCharacteristic.addEventListener('characteristicvaluechanged', handleNotifications);
         
+        // Reset buffer on new connection
+        receiveBuffer = '';
+        
         window.currentDevice = device;
         window.currentTxCharacteristic = txCharacteristic;
         
@@ -76,6 +83,9 @@ function onDisconnected(event) {
     updateButtons();
     addLogEntry('切断されました', 'info');
     
+    // Clear buffer on disconnect
+    receiveBuffer = '';
+    
     device = null;
     server = null;
     txCharacteristic = null;
@@ -87,10 +97,16 @@ function handleNotifications(event) {
     const decoder = new TextDecoder('utf-8');
     const text = decoder.decode(value);
     
-    const lines = text.split('\n');
-    for (const line of lines) {
+    // Append to buffer
+    receiveBuffer += text;
+    
+    // Process complete lines
+    let newlineIndex;
+    while ((newlineIndex = receiveBuffer.indexOf('\n')) !== -1) {
+        const line = receiveBuffer.substring(0, newlineIndex);
         if (line.trim()) {
             addLogEntry(line);
         }
+        receiveBuffer = receiveBuffer.substring(newlineIndex + 1);
     }
 }
