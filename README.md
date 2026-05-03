@@ -180,6 +180,7 @@ void send_data_direct(int sensor_id, int value1, int value2) {
 - **Pybricks IDEとの同時接続は不可** - 事前にIDEから切断してください
 - **ストリーミング保存はChrome/Edgeのみ** - File System Access API使用
 - **ログ追加停止中もストリーミング保存は動作** - ファイルには書き込まれる
+- **1行の最大文字数は256文字** - それを超える場合は分割して表示されます
 
 ## ライセンス
 

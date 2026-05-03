@@ -109,4 +109,13 @@ function handleNotifications(event) {
         }
         receiveBuffer = receiveBuffer.substring(newlineIndex + 1);
     }
+    
+    // Force display if buffer exceeds 256 characters without newline
+    if (receiveBuffer.length > 256) {
+        const line = receiveBuffer.substring(0, 256);
+        if (line.trim()) {
+            addLogEntry(line);
+        }
+        receiveBuffer = receiveBuffer.substring(256);
+    }
 }
