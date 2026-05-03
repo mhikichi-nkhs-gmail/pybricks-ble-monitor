@@ -2,6 +2,10 @@
 
 Pybricks IDEのBluetooth通信と同じプロトコル（Nordic UART Service）を使用し、ブラウザからPybricks/SPIKE-RTハブに接続してデータを表示・保存するアプリです。
 
+**Pybricks IDEとの違い:**
+- Pybricks IDEはインターネット接続が必要ですが、本アプリは**インターネット接続不要**で動作します
+- ローカルファイルとして実行可能で、オフライン環境でも使用できます
+
 <img width="1858" height="924" alt="image" src="https://github.com/user-attachments/assets/96fe9ec3-9abf-4da9-b93b-572efe6eddfb" />
 
 ## 機能
