@@ -85,9 +85,11 @@ start.bat
 
 ## SPIKE-RT (Pybricks) 側の設定
 
-### Bluetoothシリアル出力の有効化
+### 方法1: SysLogを使用する場合
 
-SPIKE-RTで動かすプロジェクトの `app.cdl` ファイルで、システムログタスクの出力先をBluetoothに変更します。
+`app.cdl` を変更して、システムログタスクの出力先をBluetoothに変更します。
+
+#### 設定手順
 
 **ファイル:** `app.cdl` (134行目付近)
 
@@ -127,9 +129,7 @@ cell tLogTask LogTask {
 };
 ```
 
-### データ送信例
-
-SPIKE-RT上のC言語アプリケーションからデータを送信する例：
+#### データ送信例
 
 ```c
 #include <t_syslog.h>
@@ -145,11 +145,13 @@ void send_sensor_data(int sensor_id, int value1, int value2) {
 "14:32:10.123","1","39.00","15.00"
 ```
 
-### 別方法: syslogを使わない直接送信
+### 方法2: 直接送信する場合
 
-`add.cdl` を変更せずに、アプリケーションから直接Bluetoothシリアルに送信することも可能です。
+`app.cdl` を変更せずに、アプリケーションから直接Bluetoothシリアルに送信します。
 
-**注意:** 事前にBluetoothデバイスをオープンしておく必要があります。
+#### 設定手順
+
+**注意:** ユーザープログラムでBluetoothデバイスをオープンしておく必要があります。これは接続時のデバイス一覧に表示させるために必要です。
 
 ```c
 #include <serial.h>
@@ -167,14 +169,6 @@ void send_data_direct(int sensor_id, int value1, int value2) {
     serial_wri_dat(2, buffer, len);
 }
 ```
-
-**メリット:**
-- `add.cdl` の変更が不要
-- フォーマットを自由に制御可能
-
-**デメリット:**
-- アプリケーションでポート管理が必要
-- 他のログ出力との統合が必要な場合は別途対応が必要
 
 ## 注意事項
 
