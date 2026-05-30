@@ -2,6 +2,7 @@
 
 // Buffer for incomplete data
 let receiveBuffer = '';
+let textDecoder = null;
 
 async function connect() {
     if (!navigator.bluetooth) {
@@ -43,8 +44,9 @@ async function connect() {
         await txCharacteristic.startNotifications();
         txCharacteristic.addEventListener('characteristicvaluechanged', handleNotifications);
         
-        // Reset buffer on new connection
+        // Reset buffer and create new decoder on new connection
         receiveBuffer = '';
+        textDecoder = new TextDecoder('utf-8');
         
         window.currentDevice = device;
         window.currentTxCharacteristic = txCharacteristic;
@@ -94,8 +96,9 @@ function onDisconnected(event) {
 
 function handleNotifications(event) {
     const value = event.target.value;
-    const decoder = new TextDecoder('utf-8');
-    const text = decoder.decode(value);
+    
+    // Use streaming decoder to handle split multi-byte characters
+    const text = textDecoder.decode(value, { stream: true });
     
     // Append to buffer
     receiveBuffer += text;
